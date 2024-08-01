@@ -1,8 +1,12 @@
-import { Schema, model } from 'mongoose'
+import { type Document, Schema, type Types, model } from 'mongoose'
 
-const TokenSchema = new Schema({
+export interface IToken extends Document {
+	user: Types.ObjectId
+	refreshToken: string
+}
+const TokenSchema = new Schema<IToken>({
 	user: { type: Schema.Types.ObjectId, ref: 'User' },
 	refreshToken: { type: String, required: true }
 })
 
-module.exports = model('Token', TokenSchema)
+export const Token = model<IToken>('Token', TokenSchema)
