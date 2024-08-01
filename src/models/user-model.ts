@@ -14,4 +14,4 @@ const UserSchema = new Schema<IUser>({
 	activationLink: { type: String }
 })
 
-export const User = model<IUser>('User', UserSchema)
+export const UserModel = model<IUser>('User', UserSchema)
