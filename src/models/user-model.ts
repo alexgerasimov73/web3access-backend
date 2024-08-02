@@ -1,6 +1,6 @@
 import { type Document, Schema, model } from 'mongoose'
 
-export interface IUser extends Document {
+export interface IUser extends Document<string> {
 	email: string
 	password: string
 	isActivated?: boolean
@@ -14,4 +14,4 @@ const UserSchema = new Schema<IUser>({
 	activationLink: { type: String }
 })
 
-export const UserModel = model<IUser>('User', UserSchema)
+export const userModel = model<IUser>('User', UserSchema)
