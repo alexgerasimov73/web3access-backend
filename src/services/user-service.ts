@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import uuid from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { userModel } from '../models/user-model'
 import { sendActivationMail } from './mail-service'
 import { generateTokens, saveToken } from './token-service'
@@ -12,14 +12,17 @@ export const registerService = async (email: string, password: string) => {
 		throw new Error(`The user with this email: ${email} already exists`)
 
 	const hashedPassword = await bcrypt.hash(password, 3)
-	const activationLink = uuid.v4()
+	const activationLink = uuidv4()
 	const user = await userModel.create({
 		email,
 		password: hashedPassword,
 		activationLink
 	})
 
-	await sendActivationMail(email, activationLink)
+	await sendActivationMail(
+		email,
+		`${process.env.API_URL}/api/activate/${activationLink}`
+	)
 	const userDto = new UserDto(user)
 	const tokens = generateTokens({ ...userDto })
 
