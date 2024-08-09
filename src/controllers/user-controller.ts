@@ -1,5 +1,7 @@
 import type { Response, Request, NextFunction } from 'express'
+import { validationResult } from 'express-validator'
 import { activateService, registerService } from '../services/user-service'
+import { ApiError } from '../exceptions/api-error'
 
 export const register = async (
 	req: Request,
@@ -7,6 +9,10 @@ export const register = async (
 	next: NextFunction
 ) => {
 	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return next(ApiError.BadRequest('Validation error', errors.array() as []))
+		}
 		const { email, password } = req.body
 
 		const userData = await registerService(email, password)

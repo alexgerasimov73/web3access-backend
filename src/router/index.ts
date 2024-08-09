@@ -1,4 +1,5 @@
 import express from 'express'
+import { body } from 'express-validator'
 import {
 	activate,
 	getUsers,
@@ -10,7 +11,12 @@ import {
 
 const router = express.Router()
 
-router.post('/register', register)
+router.post(
+	'/register',
+	body('email').isEmail(),
+	body('password').isLength({ min: 3, max: 32 }),
+	register
+)
 router.post('/login', login)
 router.post('/logout', logout)
 router.get('/activate/:link', activate)
