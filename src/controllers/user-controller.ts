@@ -1,5 +1,5 @@
 import type { Response, Request, NextFunction } from 'express'
-import { registerService } from '../services/user-service'
+import { activateService, registerService } from '../services/user-service'
 
 export const register = async (
 	req: Request,
@@ -19,7 +19,7 @@ export const register = async (
 
 		return res.json(userData)
 	} catch (error) {
-		console.error(error)
+		next(error)
 	}
 }
 
@@ -29,7 +29,9 @@ export const login = async (
 	next: NextFunction
 ) => {
 	try {
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 }
 
 export const logout = async (
@@ -38,7 +40,9 @@ export const logout = async (
 	next: NextFunction
 ) => {
 	try {
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 }
 
 export const activate = async (
@@ -47,7 +51,13 @@ export const activate = async (
 	next: NextFunction
 ) => {
 	try {
-	} catch (error) {}
+		const activationLink = req.params.link
+		await activateService(activationLink)
+
+		return res.redirect(process.env.CLIENT_URL!)
+	} catch (error) {
+		next(error)
+	}
 }
 
 export const refresh = async (
@@ -56,7 +66,9 @@ export const refresh = async (
 	next: NextFunction
 ) => {
 	try {
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 }
 
 export const getUsers = async (
@@ -65,5 +77,7 @@ export const getUsers = async (
 	next: NextFunction
 ) => {
 	try {
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 }

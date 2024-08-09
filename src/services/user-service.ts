@@ -4,12 +4,15 @@ import { userModel } from '../models/user-model'
 import { sendActivationMail } from './mail-service'
 import { generateTokens, saveToken } from './token-service'
 import { UserDto } from '../dto/user-dto'
+import { ApiError } from '../exceptions/api-error'
 
 export const registerService = async (email: string, password: string) => {
 	const candidate = await userModel.findOne({ email })
 
 	if (candidate)
-		throw new Error(`The user with this email: ${email} already exists`)
+		throw ApiError.BadRequest(
+			`The user with this email: ${email} already exists`
+		)
 
 	const hashedPassword = await bcrypt.hash(password, 3)
 	const activationLink = uuidv4()
@@ -31,11 +34,18 @@ export const registerService = async (email: string, password: string) => {
 	return { ...tokens, user: userDto }
 }
 
+export const activateService = async (activationLink: string) => {
+	const user = await userModel.findOne({ activationLink })
+
+	if (!user) throw ApiError.BadRequest('The link is incorrect')
+
+	user.isActivated = true
+	await user.save()
+}
+
 export const loginService = async () => {}
 
 export const logoutService = async () => {}
-
-export const activateService = async () => {}
 
 export const refreshService = async () => {}
 
