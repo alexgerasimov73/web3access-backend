@@ -4,6 +4,7 @@ import {
 	activateService,
 	loginService,
 	logoutService,
+	refreshService,
 	registerService
 } from '../services/user-service'
 import { ApiError } from '../exceptions/api-error'
@@ -93,6 +94,17 @@ export const refresh = async (
 	next: NextFunction
 ) => {
 	try {
+		const { refreshToken } = req.cookies
+
+		const userData = await refreshService(refreshToken)
+		res.cookie('refreshToken', userData.refreshToken, {
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			httpOnly: true
+			// TODO: Enable this.
+			// secure: true
+		})
+
+		return res.json(userData)
 	} catch (error) {
 		next(error)
 	}

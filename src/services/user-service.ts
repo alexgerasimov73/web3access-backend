@@ -2,7 +2,13 @@ import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 import { userModel } from '../models/user-model'
 import { sendActivationMail } from './mail-service'
-import { generateTokens, removeToken, saveToken } from './token-service'
+import {
+	findToken,
+	generateTokens,
+	removeToken,
+	saveToken,
+	validateRefreshToken
+} from './token-service'
 import { UserDto } from '../dto/user-dto'
 import { ApiError } from '../exceptions/api-error'
 
@@ -64,6 +70,23 @@ export const loginService = async (email: string, password: string) => {
 export const logoutService = async (refreshToken: string) =>
 	await removeToken(refreshToken)
 
-export const refreshService = async () => {}
+export const refreshService = async (refreshToken: string) => {
+	if (!refreshToken) throw ApiError.UnauthorizedError()
+
+	const userData = validateRefreshToken(refreshToken)
+	const tokenFromDb = findToken(refreshToken)
+	if (!userData || !tokenFromDb) throw ApiError.UnauthorizedError()
+
+	if (!userData?.id) return
+
+	const user = await userModel.findById({ userData.id })
+
+	const userDto = new UserDto(user)
+	const tokens = generateTokens({ ...userDto })
+
+	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
+
+	return { ...tokens, user: userDto }
+}
 
 export const getUsersService = async () => {}
