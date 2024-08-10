@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 import { userModel } from '../models/user-model'
 import { sendActivationMail } from './mail-service'
-import { generateTokens, saveToken } from './token-service'
+import { generateTokens, removeToken, saveToken } from './token-service'
 import { UserDto } from '../dto/user-dto'
 import { ApiError } from '../exceptions/api-error'
 
@@ -43,9 +43,26 @@ export const activateService = async (activationLink: string) => {
 	await user.save()
 }
 
-export const loginService = async () => {}
+export const loginService = async (email: string, password: string) => {
+	const user = await userModel.findOne({ email })
+	if (!user)
+		throw ApiError.BadRequest(
+			`The user with this email: ${email} doesn't exist`
+		)
 
-export const logoutService = async () => {}
+	const isPasswordEqual = await bcrypt.compare(password, user.password)
+	if (!isPasswordEqual) throw ApiError.BadRequest(`The password is wrong`)
+
+	const userDto = new UserDto(user)
+	const tokens = generateTokens({ ...userDto })
+
+	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
+
+	return { ...tokens, user: userDto }
+}
+
+export const logoutService = async (refreshToken: string) =>
+	await removeToken(refreshToken)
 
 export const refreshService = async () => {}
 

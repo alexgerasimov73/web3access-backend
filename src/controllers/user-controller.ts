@@ -1,6 +1,11 @@
 import type { Response, Request, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
-import { activateService, registerService } from '../services/user-service'
+import {
+	activateService,
+	loginService,
+	logoutService,
+	registerService
+} from '../services/user-service'
 import { ApiError } from '../exceptions/api-error'
 
 export const register = async (
@@ -35,6 +40,17 @@ export const login = async (
 	next: NextFunction
 ) => {
 	try {
+		const { email, password } = req.body
+
+		const userData = await loginService(email, password)
+		res.cookie('refreshToken', userData.refreshToken, {
+			maxAge: 30 * 24 * 60 * 60 * 1000,
+			httpOnly: true
+			// TODO: Enable this.
+			// secure: true
+		})
+
+		return res.json(userData)
 	} catch (error) {
 		next(error)
 	}
@@ -46,6 +62,11 @@ export const logout = async (
 	next: NextFunction
 ) => {
 	try {
+		const { refreshToken } = req.cookies
+		const token = logoutService(refreshToken)
+		res.clearCookie(refreshToken)
+
+		return res.json(token)
 	} catch (error) {
 		next(error)
 	}
