@@ -2,6 +2,7 @@ import type { Response, Request, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import {
 	activateService,
+	getAllUsersService,
 	loginService,
 	logoutService,
 	refreshService,
@@ -116,6 +117,9 @@ export const getUsers = async (
 	next: NextFunction
 ) => {
 	try {
+		const users = getAllUsersService()
+
+		return res.json(users)
 	} catch (error) {
 		next(error)
 	}

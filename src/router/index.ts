@@ -8,6 +8,7 @@ import {
 	refresh,
 	register
 } from '../controllers/user-controller'
+import { authMiddleware } from '../middlewares/auth-middleware'
 
 const router = express.Router()
 
@@ -21,6 +22,6 @@ router.post('/login', login)
 router.post('/logout', logout)
 router.get('/activate/:link', activate)
 router.get('/refresh', refresh)
-router.get('/users', getUsers)
+router.get('/users', authMiddleware, getUsers)
 
 export default router

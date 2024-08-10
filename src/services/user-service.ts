@@ -89,4 +89,4 @@ export const refreshService = async (refreshToken: string) => {
 	return { ...tokens, user: userDto }
 }
 
-export const getUsersService = async () => {}
+export const getAllUsersService = async () => await userModel.find()
