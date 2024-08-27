@@ -77,9 +77,11 @@ export const refreshService = async (refreshToken: string) => {
 	const tokenFromDb = findToken(refreshToken)
 	if (!userData || !tokenFromDb) throw ApiError.UnauthorizedError()
 
-	if (!userData?.id) return
+	if (!userData.id) return
 
-	const user = await userModel.findById({ userData.id })
+	const user = await userModel.findById(userData.id)
+
+	if (!user) return
 
 	const userDto = new UserDto(user)
 	const tokens = generateTokens({ ...userDto })

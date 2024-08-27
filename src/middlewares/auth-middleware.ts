@@ -1,6 +1,13 @@
 import type { Response, Request, NextFunction } from 'express'
 import { ApiError } from '../exceptions/api-error'
 import { validateAccessToken } from '../services/token-service'
+import { JwtPayload } from 'jsonwebtoken'
+
+declare module 'express-serve-static-core' {
+	export interface Request {
+		user?: string | JwtPayload
+	}
+}
 
 export const authMiddleware = (
 	req: Request,

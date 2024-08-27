@@ -1,6 +1,8 @@
-import jwt from 'jsonwebtoken'
+import jwt, { type JwtPayload } from 'jsonwebtoken'
 import { tokenModel } from '../models/token-model'
 import { IUserDto } from '../dto/user-dto'
+
+export interface TUserJwtPayload extends IUserDto, JwtPayload {}
 
 export const generateTokens = (payload: IUserDto) => {
 	const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET!, {
@@ -41,7 +43,10 @@ export const validateAccessToken = (accessToken: string) => {
 
 export const validateRefreshToken = (refreshToken: string) => {
 	try {
-		return jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET!)
+		return jwt.verify(
+			refreshToken,
+			process.env.JWT_REFRESH_SECRET!
+		) as TUserJwtPayload
 	} catch (error) {
 		console.error(error)
 		return null
