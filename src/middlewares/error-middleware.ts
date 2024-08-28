@@ -2,7 +2,7 @@ import type { Response, Request, NextFunction } from 'express'
 import { ApiError } from '../exceptions/api-error'
 
 export const errorMiddleware = (
-	err: any,
+	err: Error,
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -15,5 +15,5 @@ export const errorMiddleware = (
 			.json({ message: err.message, errors: err.errors })
 	}
 
-	return res.status(500).json({ message: 'Unexpected error' })
+	return res.status(500).json({ message: `Unexpected error: ${err.message}` })
 }

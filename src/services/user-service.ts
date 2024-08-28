@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
-import { userModel } from '../models/user-model'
+import { IUser, userModel } from '../models/user-model'
 import { sendActivationMail } from './mail-service'
 import {
 	findToken,
@@ -11,6 +11,15 @@ import {
 } from './token-service'
 import { UserDto } from '../dto/user-dto'
 import { ApiError } from '../exceptions/api-error'
+
+const getUserData = async (user: IUser) => {
+	const userDto = new UserDto(user)
+	const tokens = generateTokens({ ...userDto })
+
+	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
+
+	return { ...tokens, user: userDto }
+}
 
 export const registerService = async (email: string, password: string) => {
 	const candidate = await userModel.findOne({ email })
@@ -32,12 +41,8 @@ export const registerService = async (email: string, password: string) => {
 		email,
 		`${process.env.API_URL}/api/activate/${activationLink}`
 	)
-	const userDto = new UserDto(user)
-	const tokens = generateTokens({ ...userDto })
 
-	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
-
-	return { ...tokens, user: userDto }
+	return getUserData(user)
 }
 
 export const activateService = async (activationLink: string) => {
@@ -59,12 +64,7 @@ export const loginService = async (email: string, password: string) => {
 	const isPasswordEqual = await bcrypt.compare(password, user.password)
 	if (!isPasswordEqual) throw ApiError.BadRequest(`The password is wrong`)
 
-	const userDto = new UserDto(user)
-	const tokens = generateTokens({ ...userDto })
-
-	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
-
-	return { ...tokens, user: userDto }
+	return getUserData(user)
 }
 
 export const logoutService = async (refreshToken: string) =>
@@ -83,12 +83,7 @@ export const refreshService = async (refreshToken: string) => {
 
 	if (!user) return
 
-	const userDto = new UserDto(user)
-	const tokens = generateTokens({ ...userDto })
-
-	if (userDto.id) await saveToken(userDto.id, tokens.refreshToken)
-
-	return { ...tokens, user: userDto }
+	return getUserData(user)
 }
 
 export const getAllUsersService = async () => await userModel.find()

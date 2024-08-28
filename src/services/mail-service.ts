@@ -22,7 +22,7 @@ export const sendActivationMail = async (
 		subject: `Activation of account at ${process.env.API_URL}`,
 		html: `
       <div>
-        <h1>To activate, folllow the link <a href="${activationLink}">{activationLink}</a></h1>
+        <h1>To activate, folllow the link <a href="${activationLink}">${activationLink}</a></h1>
       </div>
     `
 	})

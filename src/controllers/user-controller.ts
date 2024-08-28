@@ -10,6 +10,15 @@ import {
 } from '../services/user-service'
 import { ApiError } from '../exceptions/api-error'
 
+const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
+	res.cookie('refreshToken', refreshToken, {
+		maxAge: 30 * 24 * 60 * 60 * 1000,
+		httpOnly: true
+		// TODO: Enable this.
+		// secure: true
+	})
+}
+
 export const register = async (
 	req: Request,
 	res: Response,
@@ -20,15 +29,11 @@ export const register = async (
 		if (!errors.isEmpty()) {
 			return next(ApiError.BadRequest('Validation error', errors.array() as []))
 		}
+
 		const { email, password } = req.body
 
 		const userData = await registerService(email, password)
-		res.cookie('refreshToken', userData.refreshToken, {
-			maxAge: 30 * 24 * 60 * 60 * 1000,
-			httpOnly: true
-			// TODO: Enable this.
-			// secure: true
-		})
+		setRefreshTokenCookie(res, userData.refreshToken)
 
 		return res.json(userData)
 	} catch (error) {
@@ -45,12 +50,7 @@ export const login = async (
 		const { email, password } = req.body
 
 		const userData = await loginService(email, password)
-		res.cookie('refreshToken', userData.refreshToken, {
-			maxAge: 30 * 24 * 60 * 60 * 1000,
-			httpOnly: true
-			// TODO: Enable this.
-			// secure: true
-		})
+		setRefreshTokenCookie(res, userData.refreshToken)
 
 		return res.json(userData)
 	} catch (error) {
@@ -66,7 +66,7 @@ export const logout = async (
 	try {
 		const { refreshToken } = req.cookies
 		const token = logoutService(refreshToken)
-		res.clearCookie(refreshToken)
+		res.clearCookie('refreshToken')
 
 		return res.json(token)
 	} catch (error) {
@@ -98,12 +98,9 @@ export const refresh = async (
 		const { refreshToken } = req.cookies
 
 		const userData = await refreshService(refreshToken)
-		res.cookie('refreshToken', userData?.refreshToken, {
-			maxAge: 30 * 24 * 60 * 60 * 1000,
-			httpOnly: true
-			// TODO: Enable this.
-			// secure: true
-		})
+		if (userData?.refreshToken) {
+			setRefreshTokenCookie(res, userData.refreshToken)
+		}
 
 		return res.json(userData)
 	} catch (error) {
@@ -117,7 +114,7 @@ export const getUsers = async (
 	next: NextFunction
 ) => {
 	try {
-		const users = getAllUsersService()
+		const users = await getAllUsersService()
 
 		return res.json(users)
 	} catch (error) {
