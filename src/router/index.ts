@@ -2,6 +2,7 @@ import express from 'express'
 import { body } from 'express-validator'
 import {
 	activate,
+	getSettings,
 	getUsers,
 	login,
 	logout,
@@ -23,5 +24,6 @@ router.post('/logout', logout)
 router.get('/activate/:link', activate)
 router.get('/refresh', refresh)
 router.get('/users', authMiddleware, getUsers)
+router.get('/settings', getSettings)
 
 export default router

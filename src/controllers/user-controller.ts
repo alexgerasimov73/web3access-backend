@@ -9,6 +9,7 @@ import {
 	registerService
 } from '../services/user-service'
 import { ApiError } from '../exceptions/api-error'
+import { settings } from '../models/settings-model'
 
 const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
 	res.cookie('refreshToken', refreshToken, {
@@ -117,6 +118,18 @@ export const getUsers = async (
 		const users = await getAllUsersService()
 
 		return res.json(users)
+	} catch (error) {
+		next(error)
+	}
+}
+
+export const getSettings = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		return res.json(settings)
 	} catch (error) {
 		next(error)
 	}
