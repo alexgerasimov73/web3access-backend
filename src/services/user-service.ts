@@ -21,24 +21,27 @@ const getUserData = async (user: IUser) => {
 	return { ...tokens, user: userDto }
 }
 
-export const registerService = async (email: string, password: string) => {
-	const candidate = await userModel.findOne({ email })
+export const registerService = async (
+	emailAddress: string,
+	password: string
+) => {
+	const candidate = await userModel.findOne({ emailAddress })
 
 	if (candidate)
 		throw ApiError.BadRequest(
-			`The user with this email: ${email} already exists`
+			`The user with this email: ${emailAddress} already exists`
 		)
 
 	const hashedPassword = await bcrypt.hash(password, 3)
 	const activationLink = uuidv4()
 	const user = await userModel.create({
-		email,
+		emailAddress,
 		password: hashedPassword,
 		activationLink
 	})
 
 	await sendActivationMail(
-		email,
+		emailAddress,
 		`${process.env.API_URL}/api/activate/${activationLink}`
 	)
 
@@ -54,11 +57,11 @@ export const activateService = async (activationLink: string) => {
 	await user.save()
 }
 
-export const loginService = async (email: string, password: string) => {
-	const user = await userModel.findOne({ email })
+export const loginService = async (emailAddress: string, password: string) => {
+	const user = await userModel.findOne({ emailAddress })
 	if (!user)
 		throw ApiError.BadRequest(
-			`The user with this email: ${email} doesn't exist`
+			`The user with this email: ${emailAddress} doesn't exist`
 		)
 
 	const isPasswordEqual = await bcrypt.compare(password, user.password)

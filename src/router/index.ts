@@ -10,6 +10,7 @@ import {
 	register
 } from '../controllers/user-controller'
 import { authMiddleware } from '../middlewares/auth-middleware'
+import { startRegistration } from '../controllers/registration-controller'
 
 const router = express.Router()
 
@@ -25,5 +26,6 @@ router.get('/activate/:link', activate)
 router.get('/refresh', refresh)
 router.get('/users', authMiddleware, getUsers)
 router.get('/settings', getSettings)
+router.post('/start-registration', body('email').isEmail(), startRegistration)
 
 export default router
