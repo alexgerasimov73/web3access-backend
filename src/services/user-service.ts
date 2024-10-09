@@ -12,7 +12,7 @@ import {
 import { UserDto } from '../dto/user-dto'
 import { ApiError } from '../exceptions/api-error'
 
-const getUserData = async (user: IUser) => {
+export const getUserData = async (user: IUser) => {
 	const userDto = new UserDto(user)
 	const tokens = generateTokens({ ...userDto })
 
