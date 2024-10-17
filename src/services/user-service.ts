@@ -57,18 +57,18 @@ export const activateService = async (activationLink: string) => {
 	await user.save()
 }
 
-export const loginService = async (emailAddress: string, password: string) => {
-	const user = await userModel.findOne({ emailAddress })
-	if (!user)
-		throw ApiError.BadRequest(
-			`The user with this email: ${emailAddress} doesn't exist`
-		)
+// export const loginService = async (emailAddress: string, password: string) => {
+// 	const user = await userModel.findOne({ emailAddress })
+// 	if (!user)
+// 		throw ApiError.BadRequest(
+// 			`The user with this email: ${emailAddress} doesn't exist`
+// 		)
 
-	const isPasswordEqual = await bcrypt.compare(password, user.password)
-	if (!isPasswordEqual) throw ApiError.BadRequest(`The password is wrong`)
+// 	const isPasswordEqual = await bcrypt.compare(password, user.password)
+// 	if (!isPasswordEqual) throw ApiError.BadRequest(`The password is wrong`)
 
-	return getUserData(user)
-}
+// 	return getUserData(user)
+// }
 
 export const logoutService = async (refreshToken: string) =>
 	await removeToken(refreshToken)

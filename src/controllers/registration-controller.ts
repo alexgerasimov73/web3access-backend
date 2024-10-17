@@ -19,5 +19,7 @@ export const startRegistration = async (
 		const userData = await startRegistrationService(email)
 
 		return res.json(userData)
-	} catch (error) {}
+	} catch (error) {
+		next(error)
+	}
 }

@@ -25,13 +25,13 @@ export const sendStartRegistrationMail = async (
 	const html = getStartRegistrationEmailHTML(
 		link,
 		verificationToken,
-		process.env.API_URL || ''
+		process.env.CLIENT_URL || ''
 	)
 
 	await transporter.sendMail({
 		from: process.env.SMTP_USER,
 		to,
-		subject: `Activate Your Account at ${process.env.API_URL}`,
+		subject: `Start your onboarding process at ${process.env.CLIENT_URL}`,
 		html
 	})
 }

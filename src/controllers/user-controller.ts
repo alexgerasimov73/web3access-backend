@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator'
 import {
 	activateService,
 	getAllUsersService,
-	loginService,
+	// loginService,
 	logoutService,
 	refreshService,
 	registerService
@@ -42,22 +42,22 @@ export const register = async (
 	}
 }
 
-export const login = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { email, password } = req.body
+// export const login = async (
+// 	req: Request,
+// 	res: Response,
+// 	next: NextFunction
+// ) => {
+// 	try {
+// 		const { email, password } = req.body
 
-		const userData = await loginService(email, password)
-		setRefreshTokenCookie(res, userData.refreshToken)
+// 		const userData = await loginService(email, password)
+// 		setRefreshTokenCookie(res, userData.refreshToken)
 
-		return res.json(userData)
-	} catch (error) {
-		next(error)
-	}
-}
+// 		return res.json(userData)
+// 	} catch (error) {
+// 		next(error)
+// 	}
+// }
 
 export const logout = async (
 	req: Request,

@@ -41,6 +41,15 @@ export const getStartRegistrationEmailHTML = (
             line-height: 1.5;
             margin: 20px 0;
         }
+        .tokenBox {
+            display: inline-block;
+            padding: 20px 40px;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+        .tokenBox b {
+            font-size: 24px;
+        }
         .button {
             display: inline-block;
             margin-top: 20px;
@@ -70,9 +79,11 @@ export const getStartRegistrationEmailHTML = (
         </div>
         <div class="content">
             <p>Thank you for registering at ${apiUrl}.</p>
-            <p>This is your verification token.</p>
-            <p><b>${verificationToken}</b></p>
-            <p>Please keep this token until the end of the registration process.</p>
+            <p>This is your verification code.</p>
+            <div class="tokenBox">
+                <b>${verificationToken}</b>
+            </div>
+            <p>Please keep this code until the end of the registration process.</p>
             <p>To complete your registration, please proceed by clicking the button below:</p>
             <a href="${link}" class="button">Proceed with registration</a>
             <p>If the button above doesn't work, please copy and paste the following link into your browser:</p>

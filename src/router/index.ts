@@ -4,7 +4,7 @@ import {
 	activate,
 	getSettings,
 	getUsers,
-	login,
+	// login,
 	logout,
 	refresh,
 	register
@@ -20,7 +20,7 @@ router.post(
 	body('password').isLength({ min: 3, max: 32 }),
 	register
 )
-router.post('/login', login)
+// router.post('/login', login)
 router.post('/logout', logout)
 router.get('/activate/:link', activate)
 router.get('/refresh', refresh)

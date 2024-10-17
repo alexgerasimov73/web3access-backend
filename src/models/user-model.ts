@@ -11,28 +11,29 @@ export enum RegistrationFlowStep {
 
 export interface IUser extends Document<string> {
 	emailAddress: string
-	id: Types.ObjectId
+	id: string
 	onboardingStep: RegistrationFlowStep
 	verificationToken: string
 
 	// TODO: Remove these fields below.
-	password: string
+	password?: string
 	isActivated?: boolean
 	activationLink?: string
 }
 
 const UserSchema = new Schema<IUser>({
 	emailAddress: { type: String, required: true, unique: true },
-	id: { type: Schema.Types.ObjectId, required: true, unique: true },
+	id: { type: String, required: true, unique: true },
 	onboardingStep: {
 		type: Number,
-		enum: Object.values(RegistrationFlowStep),
+		// enum: Object.values(RegistrationFlowStep),
+		enum: [0, 1, 2, 3, 4, 5],
 		required: true
 	},
 	verificationToken: { type: String, required: true },
 
 	// TODO: Remove these fields below.
-	password: { type: String, required: true },
+	password: { type: String },
 	isActivated: { type: Boolean, default: false },
 	activationLink: { type: String }
 })
