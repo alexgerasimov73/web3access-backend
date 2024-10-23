@@ -11,6 +11,9 @@ export enum RegistrationFlowStep {
 
 export interface IRegistration extends Document<string> {
 	emailAddress: string
+	firstName?: string
+	lastName?: string
+	linkedIn?: string
 	id: string
 	onboardingStep: RegistrationFlowStep
 	verificationToken: string
@@ -18,6 +21,9 @@ export interface IRegistration extends Document<string> {
 
 const RegistrationSchema = new Schema<IRegistration>({
 	emailAddress: { type: String, required: true, unique: true },
+	firstName: { type: String },
+	lastName: { type: String },
+	linkedIn: { type: String },
 	id: { type: String, required: true, unique: true },
 	onboardingStep: {
 		type: Number,

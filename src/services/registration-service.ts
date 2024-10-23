@@ -5,20 +5,15 @@ import { sendStartRegistrationMail } from './mail-service'
 import { generateVerificationToken } from '../config/utils'
 import { registrationModel } from '../models/registration-model'
 import { RegistrationDto } from '../dto/registration-dto'
+import { ERRORS } from '../config/constants'
 
 export const startRegistrationService = async (emailAddress: string) => {
 	const candidate = await userModel.findOne({ emailAddress })
 	const foundRegistration = await registrationModel.findOne({ emailAddress })
 
-	if (candidate)
-		throw ApiError.BadRequest(
-			`The user with this email: ${emailAddress} already exists`
-		)
+	if (candidate) throw ApiError.BadRequest(ERRORS.USER_EXISTS)
 
-	if (foundRegistration)
-		throw ApiError.BadRequest(
-			`This email: ${emailAddress} has already been used in the registration process. Please check your email to proceed with the registration process.`
-		)
+	if (foundRegistration) throw ApiError.BadRequest(ERRORS.REGISTRATION_EXISTS)
 
 	const id = uuidv4()
 	const verificationToken = generateVerificationToken()
@@ -46,14 +41,10 @@ export const verifyEmailService = async (
 	const foundRegistration = await registrationModel.findOne({ id })
 
 	if (!foundRegistration)
-		throw ApiError.BadRequest(
-			`The registration process with this id: ${id} doesn't exists`
-		)
+		throw ApiError.BadRequest(ERRORS.REGISTRATION_NOT_FOUND)
 
 	if (foundRegistration.verificationToken !== verificationToken)
-		throw ApiError.BadRequest(
-			`This verification code: ${verificationToken} is wrong.`
-		)
+		throw ApiError.BadRequest(ERRORS.INVALID_VERIFICATION_CODE)
 
 	if (foundRegistration.onboardingStep === RegistrationFlowStep.VerifyEmail) {
 		foundRegistration.onboardingStep = RegistrationFlowStep.YourDetails
@@ -72,9 +63,13 @@ export const submitDetailsService = async (
 	const foundRegistration = await registrationModel.findOne({ id })
 
 	if (!foundRegistration)
-		throw ApiError.BadRequest(
-			`The registration process with this id doesn't exists`
-		)
+		throw ApiError.BadRequest(ERRORS.REGISTRATION_NOT_FOUND)
+
+	foundRegistration.firstName = firstName
+	foundRegistration.lastName = lastName
+	foundRegistration.linkedIn = linkedIn
+
+	await foundRegistration.save()
 
 	return new RegistrationDto(foundRegistration)
 }
