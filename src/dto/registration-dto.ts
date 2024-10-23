@@ -1,3 +1,4 @@
+import { Address } from '../config/types'
 import {
 	IRegistration,
 	RegistrationFlowStep
@@ -5,6 +6,7 @@ import {
 
 export interface IRegistrationDto {
 	emailAddress: string
+	ethAddress: Address
 	firstName?: string
 	lastName?: string
 	linkedIn?: string
@@ -15,6 +17,7 @@ export interface IRegistrationDto {
 
 export class RegistrationDto<IRegistrationDto> {
 	emailAddress
+	ethAddress
 	firstName
 	lastName
 	linkedIn
@@ -24,6 +27,7 @@ export class RegistrationDto<IRegistrationDto> {
 
 	constructor(model: IRegistration) {
 		this.emailAddress = model.emailAddress
+		this.ethAddress = model.ethAddress
 		this.firstName = model.firstName
 		this.lastName = model.lastName
 		this.linkedIn = model.linkedIn

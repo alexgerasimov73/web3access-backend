@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { getSettings } from '../controllers/user-controller'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import {
+	confirmWallet,
 	startRegistration,
 	submitDetails,
 	verifyEmail
@@ -50,6 +51,17 @@ router.post(
 		)
 		.withMessage('Invalid LinkedIn URL'),
 	submitDetails
+)
+
+router.post(
+	'/registration/confirm-wallet',
+	body('ethAddress').custom(value => {
+		if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+			throw new Error('Invalid Ethereum address')
+		}
+		return true
+	}),
+	confirmWallet
 )
 
 export default router

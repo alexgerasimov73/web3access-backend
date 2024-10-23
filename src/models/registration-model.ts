@@ -1,4 +1,5 @@
 import { type Document, Schema, model } from 'mongoose'
+import { Address } from '../config/types'
 
 export enum RegistrationFlowStep {
 	VerifyEmail,
@@ -11,6 +12,7 @@ export enum RegistrationFlowStep {
 
 export interface IRegistration extends Document<string> {
 	emailAddress: string
+	ethAddress?: Address
 	firstName?: string
 	lastName?: string
 	linkedIn?: string
@@ -21,6 +23,7 @@ export interface IRegistration extends Document<string> {
 
 const RegistrationSchema = new Schema<IRegistration>({
 	emailAddress: { type: String, required: true, unique: true },
+	ethAddress: { type: String },
 	firstName: { type: String },
 	lastName: { type: String },
 	linkedIn: { type: String },

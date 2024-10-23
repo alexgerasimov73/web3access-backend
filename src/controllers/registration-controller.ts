@@ -2,11 +2,13 @@ import type { Response, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import { ApiError } from '../exceptions/api-error'
 import {
+	confirmWalletService,
 	startRegistrationService,
 	submitDetailsService,
 	verifyEmailService
 } from '../services/registration-service'
 import {
+	IConfirmWalletBody,
 	IStartRegistrationBody,
 	ISubmitDetailsBody,
 	IVerifyEmailBody,
@@ -73,6 +75,32 @@ export const submitDetails = async (
 			firstName,
 			lastName,
 			linkedIn
+		)
+
+		return res.json(registrationData)
+	} catch (error) {
+		next(error)
+	}
+}
+
+export const confirmWallet = async (
+	req: TRequestBody<IConfirmWalletBody>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return next(ApiError.BadRequest('Validation error', errors.array() as []))
+		}
+
+		const { id, ethAddress, ethSignature, transmittedAt } = req.body
+
+		const registrationData = await confirmWalletService(
+			id,
+			ethAddress,
+			ethSignature,
+			transmittedAt
 		)
 
 		return res.json(registrationData)
