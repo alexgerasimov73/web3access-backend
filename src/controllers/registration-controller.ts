@@ -6,6 +6,7 @@ import {
 	signDocumentService,
 	startRegistrationService,
 	submitDetailsService,
+	verifyCustomerService,
 	verifyEmailService
 } from '../services/registration-service'
 import {
@@ -13,6 +14,7 @@ import {
 	ISignDocumentBody,
 	IStartRegistrationBody,
 	ISubmitDetailsBody,
+	IVerifyCustomerBody,
 	IVerifyEmailBody,
 	TRequestBody
 } from '../config/types'
@@ -130,6 +132,27 @@ export const signDocument = async (
 			ethSignature,
 			transmittedAt
 		)
+
+		return res.json(registrationData)
+	} catch (error) {
+		next(error)
+	}
+}
+
+export const verifyCustomer = async (
+	req: TRequestBody<IVerifyCustomerBody>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return next(ApiError.BadRequest('Validation error', errors.array() as []))
+		}
+
+		const { id, simulatedData } = req.body
+
+		const registrationData = await verifyCustomerService(id, simulatedData)
 
 		return res.json(registrationData)
 	} catch (error) {

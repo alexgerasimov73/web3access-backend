@@ -48,14 +48,14 @@ export const registerService = async (
 	return getUserData(user)
 }
 
-export const activateService = async (activationLink: string) => {
-	const user = await userModel.findOne({ activationLink })
+// export const activateService = async (activationLink: string) => {
+// 	const user = await userModel.findOne({ activationLink })
 
-	if (!user) throw ApiError.BadRequest('The link is incorrect')
+// 	if (!user) throw ApiError.BadRequest('The link is incorrect')
 
-	user.isActivated = true
-	await user.save()
-}
+// 	user.isActivated = true
+// 	await user.save()
+// }
 
 // export const loginService = async (emailAddress: string, password: string) => {
 // 	const user = await userModel.findOne({ emailAddress })
@@ -89,4 +89,4 @@ export const refreshService = async (refreshToken: string) => {
 	return getUserData(user)
 }
 
-export const getAllUsersService = async () => await userModel.find()
+// export const getAllUsersService = async () => await userModel.find()

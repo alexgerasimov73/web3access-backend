@@ -1,16 +1,20 @@
 import { v4 as uuidv4 } from 'uuid'
 import { ApiError } from '../exceptions/api-error'
-import { RegistrationFlowStep, userModel } from '../models/user-model'
+import { userModel } from '../models/user-model'
 import { sendStartRegistrationMail } from './mail-service'
 import {
 	generateVerificationToken,
 	verifyWalletSignature
 } from '../config/utils'
-import { registrationModel } from '../models/registration-model'
+import {
+	RegistrationFlowStep,
+	registrationModel
+} from '../models/registration-model'
 import { RegistrationDto } from '../dto/registration-dto'
 import { ERRORS } from '../config/constants'
 import { settings } from '../models/settings-model'
 import { Address } from '../config/types'
+import { getUserData } from './user-service'
 
 export const startRegistrationService = async (emailAddress: string) => {
 	const candidate = await userModel.findOne({ emailAddress })
@@ -145,4 +149,34 @@ export const signDocumentService = async (
 	await foundRegistration.save()
 
 	return new RegistrationDto(foundRegistration)
+}
+
+export const verifyCustomerService = async (
+	id: string,
+	simulatedData: string
+) => {
+	const foundRegistration = await registrationModel.findOne({ id })
+
+	if (!foundRegistration)
+		throw ApiError.BadRequest(ERRORS.REGISTRATION_NOT_FOUND)
+
+	if (!simulatedData) throw ApiError.BadRequest(ERRORS.NO_DATA)
+
+	foundRegistration.identityCheckStatus = true
+	foundRegistration.onboardingStep = RegistrationFlowStep.Confirmation
+
+	await foundRegistration.save()
+
+	const newUser = await userModel.create({
+		emailAddress: foundRegistration.emailAddress,
+		ethAddress: foundRegistration.ethAddress,
+		firstName: foundRegistration.firstName,
+		lastName: foundRegistration.lastName,
+		linkedIn: foundRegistration.linkedIn
+	})
+
+	const user = await getUserData(newUser)
+	const registration = new RegistrationDto(foundRegistration)
+
+	return { registration, user }
 }

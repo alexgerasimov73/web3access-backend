@@ -18,6 +18,7 @@ export interface IRegistration extends Document<string> {
 	lastName?: string
 	linkedIn?: string
 	id: string
+	identityCheckStatus?: boolean
 	onboardingStep: RegistrationFlowStep
 	verificationToken: string
 }
@@ -30,6 +31,7 @@ const RegistrationSchema = new Schema<IRegistration>({
 	lastName: { type: String },
 	linkedIn: { type: String },
 	id: { type: String, required: true, unique: true },
+	identityCheckStatus: { type: Boolean },
 	onboardingStep: {
 		type: Number,
 		enum: [0, 1, 2, 3, 4, 5],

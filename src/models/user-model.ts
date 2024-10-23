@@ -1,41 +1,22 @@
 import { type Document, Types, Schema, model } from 'mongoose'
-
-export enum RegistrationFlowStep {
-	VerifyEmail,
-	YourDetails,
-	ConnectWallet,
-	Documentation,
-	KYCAML,
-	Confirmation
-}
+import { Address } from '../config/types'
 
 export interface IUser extends Document<string> {
 	emailAddress: string
+	ethAddress: Address
 	id: string
-	onboardingStep: RegistrationFlowStep
-	verificationToken: string
-
-	// TODO: Remove these fields below.
-	password?: string
-	isActivated?: boolean
-	activationLink?: string
+	firstName: string
+	lastName: string
+	linkedIn?: string
 }
 
 const UserSchema = new Schema<IUser>({
 	emailAddress: { type: String, required: true, unique: true },
+	ethAddress: { type: String, required: true, unique: true },
 	id: { type: String, required: true, unique: true },
-	onboardingStep: {
-		type: Number,
-		// enum: Object.values(RegistrationFlowStep),
-		enum: [0, 1, 2, 3, 4, 5],
-		required: true
-	},
-	verificationToken: { type: String, required: true },
-
-	// TODO: Remove these fields below.
-	password: { type: String },
-	isActivated: { type: Boolean, default: false },
-	activationLink: { type: String }
+	firstName: { type: String, required: true },
+	lastName: { type: String, required: true },
+	linkedIn: { type: String }
 })
 
 export const userModel = model<IUser>('User', UserSchema)

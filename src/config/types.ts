@@ -29,3 +29,7 @@ export interface ISignDocumentBody extends IVerifyEmailBody {
 	readonly ethSignature: string
 	readonly transmittedAt: string
 }
+
+export interface IVerifyCustomerBody extends IVerifyEmailBody {
+	readonly simulatedData: string
+}

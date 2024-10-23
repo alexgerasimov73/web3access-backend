@@ -7,6 +7,7 @@ import {
 	signDocument,
 	startRegistration,
 	submitDetails,
+	verifyCustomer,
 	verifyEmail
 } from '../controllers/registration-controller'
 
@@ -66,5 +67,7 @@ router.post(
 )
 
 router.post('/registration/sign-document', signDocument)
+
+router.post('/registration/verify-customer', verifyCustomer)
 
 export default router

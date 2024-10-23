@@ -1,8 +1,6 @@
 import type { Response, Request, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import {
-	activateService,
-	getAllUsersService,
 	// loginService,
 	logoutService,
 	refreshService,
@@ -75,20 +73,20 @@ export const logout = async (
 	}
 }
 
-export const activate = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const activationLink = req.params.link
-		await activateService(activationLink)
+// export const activate = async (
+// 	req: Request,
+// 	res: Response,
+// 	next: NextFunction
+// ) => {
+// 	try {
+// 		const activationLink = req.params.link
+// 		await activateService(activationLink)
 
-		return res.redirect(process.env.CLIENT_URL!)
-	} catch (error) {
-		next(error)
-	}
-}
+// 		return res.redirect(process.env.CLIENT_URL!)
+// 	} catch (error) {
+// 		next(error)
+// 	}
+// }
 
 export const refresh = async (
 	req: Request,
@@ -109,19 +107,19 @@ export const refresh = async (
 	}
 }
 
-export const getUsers = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const users = await getAllUsersService()
+// export const getUsers = async (
+// 	req: Request,
+// 	res: Response,
+// 	next: NextFunction
+// ) => {
+// 	try {
+// 		const users = await getAllUsersService()
 
-		return res.json(users)
-	} catch (error) {
-		next(error)
-	}
-}
+// 		return res.json(users)
+// 	} catch (error) {
+// 		next(error)
+// 	}
+// }
 
 export const getSettings = (
 	req: Request,

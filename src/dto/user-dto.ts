@@ -1,27 +1,29 @@
-import { IUser, RegistrationFlowStep } from '../models/user-model'
+import { Address } from '../config/types'
+import { IUser } from '../models/user-model'
 
 export interface IUserDto {
 	emailAddress: string
+	ethAddress: Address
 	id?: string
-	onboardingStep: RegistrationFlowStep
-	verificationToken: string
-
-	isActivated?: boolean
+	firstName: string
+	lastName: string
+	linkedIn?: string
 }
 
 export class UserDto<IUserDto> {
 	emailAddress
+	ethAddress
 	id
-	onboardingStep
-	verificationToken
-	isActivated
+	firstName
+	lastName
+	linkedIn
 
 	constructor(model: IUser) {
 		this.emailAddress = model.emailAddress
+		this.ethAddress = model.ethAddress
 		this.id = model._id
-		this.onboardingStep = model.onboardingStep
-		this.verificationToken = model.verificationToken
-
-		this.isActivated = model.isActivated
+		this.firstName = model.firstName
+		this.lastName = model.lastName
+		this.linkedIn = model.linkedIn
 	}
 }
