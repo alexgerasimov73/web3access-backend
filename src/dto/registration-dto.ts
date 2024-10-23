@@ -5,6 +5,7 @@ import {
 } from '../models/registration-model'
 
 export interface IRegistrationDto {
+	documentsSignedAt: string
 	emailAddress: string
 	ethAddress: Address
 	firstName?: string
@@ -16,6 +17,7 @@ export interface IRegistrationDto {
 }
 
 export class RegistrationDto<IRegistrationDto> {
+	documentsSignedAt
 	emailAddress
 	ethAddress
 	firstName
@@ -26,6 +28,7 @@ export class RegistrationDto<IRegistrationDto> {
 	verificationToken
 
 	constructor(model: IRegistration) {
+		this.documentsSignedAt = model.documentsSignedAt
 		this.emailAddress = model.emailAddress
 		this.ethAddress = model.ethAddress
 		this.firstName = model.firstName

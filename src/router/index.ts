@@ -4,6 +4,7 @@ import { getSettings } from '../controllers/user-controller'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import {
 	confirmWallet,
+	signDocument,
 	startRegistration,
 	submitDetails,
 	verifyEmail
@@ -63,5 +64,7 @@ router.post(
 	}),
 	confirmWallet
 )
+
+router.post('/registration/sign-document', signDocument)
 
 export default router

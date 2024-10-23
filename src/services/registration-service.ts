@@ -108,3 +108,41 @@ export const confirmWalletService = async (
 
 	return new RegistrationDto(foundRegistration)
 }
+
+export const signDocumentService = async (
+	id: string,
+	documentId: string,
+	ethSignature: string,
+	transmittedAt: string
+) => {
+	const foundRegistration = await registrationModel.findOne({ id })
+
+	if (!foundRegistration)
+		throw ApiError.BadRequest(ERRORS.REGISTRATION_NOT_FOUND)
+
+	if (documentId !== settings.licenceAgreement.id)
+		throw ApiError.BadRequest(ERRORS.INCORRECT_DOCUMENT)
+
+	const digest = settings.licenseSigningTemplate
+		.replace(
+			'{{full_name}}',
+			`${foundRegistration.firstName} ${foundRegistration.lastName}`
+		)
+		.replace('{{iso8601_timestamp}}', transmittedAt)
+
+	if (!foundRegistration.ethAddress) return
+
+	await verifyWalletSignature(
+		foundRegistration.ethAddress,
+		ethSignature,
+		transmittedAt,
+		digest
+	)
+
+	foundRegistration.documentsSignedAt = transmittedAt
+	foundRegistration.onboardingStep = RegistrationFlowStep.KYCAML
+
+	await foundRegistration.save()
+
+	return new RegistrationDto(foundRegistration)
+}

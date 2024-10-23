@@ -12,18 +12,20 @@ export interface IVerifyEmailBody {
 	readonly verificationToken: string
 }
 
-export interface ISubmitDetailsBody {
-	readonly id: string
+export interface ISubmitDetailsBody extends IVerifyEmailBody {
 	readonly firstName: string
 	readonly lastName: string
 	readonly linkedIn?: string
-	readonly verificationToken: string
 }
 
-export interface IConfirmWalletBody {
-	readonly id: string
+export interface IConfirmWalletBody extends IVerifyEmailBody {
 	readonly ethAddress: Address
 	readonly ethSignature: string
 	readonly transmittedAt: string
-	readonly verificationToken: string
+}
+
+export interface ISignDocumentBody extends IVerifyEmailBody {
+	readonly documentId: string
+	readonly ethSignature: string
+	readonly transmittedAt: string
 }

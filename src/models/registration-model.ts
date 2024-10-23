@@ -11,6 +11,7 @@ export enum RegistrationFlowStep {
 }
 
 export interface IRegistration extends Document<string> {
+	documentsSignedAt: string
 	emailAddress: string
 	ethAddress?: Address
 	firstName?: string
@@ -22,6 +23,7 @@ export interface IRegistration extends Document<string> {
 }
 
 const RegistrationSchema = new Schema<IRegistration>({
+	documentsSignedAt: { type: String },
 	emailAddress: { type: String, required: true, unique: true },
 	ethAddress: { type: String },
 	firstName: { type: String },
