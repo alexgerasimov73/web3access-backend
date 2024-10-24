@@ -4,7 +4,6 @@ import { Address } from '../config/types'
 export interface IUser extends Document<string> {
 	emailAddress: string
 	ethAddress: Address
-	id?: string
 	firstName: string
 	lastName: string
 	linkedIn?: string

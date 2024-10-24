@@ -18,27 +18,27 @@ const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
 	})
 }
 
-export const register = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const errors = validationResult(req)
-		if (!errors.isEmpty()) {
-			return next(ApiError.BadRequest('Validation error', errors.array() as []))
-		}
+// export const register = async (
+// 	req: Request,
+// 	res: Response,
+// 	next: NextFunction
+// ) => {
+// 	try {
+// 		const errors = validationResult(req)
+// 		if (!errors.isEmpty()) {
+// 			return next(ApiError.BadRequest('Validation error', errors.array() as []))
+// 		}
 
-		const { email, password } = req.body
+// 		const { email, password } = req.body
 
-		const userData = await registerService(email, password)
-		setRefreshTokenCookie(res, userData.refreshToken)
+// 		const userData = await registerService(email, password)
+// 		setRefreshTokenCookie(res, userData.refreshToken)
 
-		return res.json(userData)
-	} catch (error) {
-		next(error)
-	}
-}
+// 		return res.json(userData)
+// 	} catch (error) {
+// 		next(error)
+// 	}
+// }
 
 // export const login = async (
 // 	req: Request,

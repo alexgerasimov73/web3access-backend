@@ -19,7 +19,7 @@ router.get('/settings', getSettings)
 
 router.post(
 	'/registration/start',
-	body('emailAddress').isEmail(),
+	body('emailAddress').trim().notEmpty().isEmail(),
 	startRegistration
 )
 
@@ -27,6 +27,7 @@ router.post(
 	'/registration/verify-email',
 	body('verificationToken')
 		.trim()
+		.notEmpty()
 		.isLength({ min: 8, max: 8 })
 		.withMessage('Verification token must be 8 characters long'),
 	verifyEmail
@@ -57,12 +58,15 @@ router.post(
 
 router.post(
 	'/registration/confirm-wallet',
-	body('ethAddress').custom(value => {
-		if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
-			throw new Error('Invalid Ethereum address')
-		}
-		return true
-	}),
+	body('ethAddress')
+		.trim()
+		.notEmpty()
+		.custom(value => {
+			if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+				throw new Error('Invalid Ethereum address')
+			}
+			return true
+		}),
 	confirmWallet
 )
 
