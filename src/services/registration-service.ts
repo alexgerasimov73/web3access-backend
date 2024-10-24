@@ -18,10 +18,9 @@ import { getUserData } from './user-service'
 
 export const startRegistrationService = async (emailAddress: string) => {
 	const candidate = await userModel.findOne({ emailAddress })
-	const foundRegistration = await registrationModel.findOne({ emailAddress })
-
 	if (candidate) throw ApiError.BadRequest(ERRORS.USER_EXISTS)
 
+	const foundRegistration = await registrationModel.findOne({ emailAddress })
 	if (foundRegistration) throw ApiError.BadRequest(ERRORS.REGISTRATION_EXISTS)
 
 	const id = uuidv4()
@@ -90,6 +89,14 @@ export const confirmWalletService = async (
 	ethSignature: string,
 	transmittedAt: string
 ) => {
+	const foundUserEthAddress = await userModel.findOne({ ethAddress })
+	const foundRegistrationEthAddress = await registrationModel.findOne({
+		ethAddress
+	})
+
+	if (foundUserEthAddress || foundRegistrationEthAddress)
+		throw ApiError.BadRequest(ERRORS.ETH_ADDRESS_EXISTS)
+
 	const foundRegistration = await registrationModel.findOne({ id })
 
 	if (!foundRegistration)

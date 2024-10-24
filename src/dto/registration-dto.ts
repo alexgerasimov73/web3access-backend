@@ -11,7 +11,7 @@ export interface IRegistrationDto {
 	firstName?: string
 	lastName?: string
 	linkedIn?: string
-	id?: string
+	id: string
 	identityCheckStatus?: boolean
 	onboardingStep: RegistrationFlowStep
 	verificationToken: string
@@ -36,7 +36,7 @@ export class RegistrationDto<IRegistrationDto> {
 		this.firstName = model.firstName
 		this.lastName = model.lastName
 		this.linkedIn = model.linkedIn
-		this.id = model._id
+		this.id = model.id
 		this.identityCheckStatus = model.identityCheckStatus
 		this.onboardingStep = model.onboardingStep
 		this.verificationToken = model.verificationToken

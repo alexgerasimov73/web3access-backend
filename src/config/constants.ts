@@ -1,4 +1,5 @@
 export const ERRORS = {
+	ETH_ADDRESS_EXISTS: 'This Ethereum address is already used.',
 	INCORRECT_DOCUMENT: 'The document is incorrect',
 	INVALID_SIGNATURE:
 		'Invalid signature: The provided signature does not match the wallet address.',

@@ -4,7 +4,7 @@ import { Address } from '../config/types'
 export interface IUser extends Document<string> {
 	emailAddress: string
 	ethAddress: Address
-	id: string
+	id?: string
 	firstName: string
 	lastName: string
 	linkedIn?: string
@@ -13,7 +13,6 @@ export interface IUser extends Document<string> {
 const UserSchema = new Schema<IUser>({
 	emailAddress: { type: String, required: true, unique: true },
 	ethAddress: { type: String, required: true, unique: true },
-	id: { type: String, required: true, unique: true },
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
 	linkedIn: { type: String }

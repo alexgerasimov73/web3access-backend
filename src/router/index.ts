@@ -45,11 +45,11 @@ router.post(
 		.notEmpty()
 		.withMessage('Last name is required'),
 	body('linkedIn')
-		.optional()
+		.optional({ checkFalsy: true })
 		.trim()
-		.escape()
 		.matches(
-			/^(https?:\/\/)?([\w]+\.)?linkedin\.com\/(pub|in|profile)\/([a-zA-Z0-9_-]+)\/?$/
+			'^(https?:\\/\\/)?([\\w]+\\.)?linkedin\\.com\\/(pub|in|profile)\\/([-a-zA-Z0-9]+)\\/?$',
+			'i'
 		)
 		.withMessage('Invalid LinkedIn URL'),
 	submitDetails

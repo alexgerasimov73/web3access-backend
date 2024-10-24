@@ -26,7 +26,7 @@ export interface IRegistration extends Document<string> {
 const RegistrationSchema = new Schema<IRegistration>({
 	documentsSignedAt: { type: String },
 	emailAddress: { type: String, required: true, unique: true },
-	ethAddress: { type: String },
+	ethAddress: { type: String, unique: true },
 	firstName: { type: String },
 	lastName: { type: String },
 	linkedIn: { type: String },
