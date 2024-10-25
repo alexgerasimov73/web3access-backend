@@ -1,6 +1,6 @@
 import express from 'express'
 import { body } from 'express-validator'
-import { getSettings } from '../controllers/user-controller'
+import { getSettings, login, refresh } from '../controllers/user-controller'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import {
 	confirmWallet,
@@ -13,7 +13,6 @@ import {
 
 const router = express.Router()
 
-// router.get('/refresh', refresh)
 // router.get('/users', authMiddleware, getUsers)
 router.get('/settings', getSettings)
 
@@ -73,5 +72,22 @@ router.post(
 router.post('/registration/sign-document', signDocument)
 
 router.post('/registration/verify-customer', verifyCustomer)
+
+router.get('/refresh', refresh)
+
+router.post(
+	'/login',
+	body('chainId').trim().notEmpty(),
+	body('ethAddress')
+		.trim()
+		.notEmpty()
+		.custom(value => {
+			if (!/^0x[a-fA-F0-9]{40}$/.test(value)) {
+				throw new Error('Invalid Ethereum address')
+			}
+			return true
+		}),
+	login
+)
 
 export default router

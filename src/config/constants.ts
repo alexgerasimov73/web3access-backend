@@ -6,6 +6,7 @@ export const ERRORS = {
 	INVALID_VERIFICATION_CODE: 'The provided verification code is incorrect.',
 	NO_DATA: 'The data is not provided.',
 	OLD_TIMESTAMP: 'Invalid signature: The timestamp is too old or invalid.',
+	USER_DOESNT_EXISTS: 'The user with this Ethereum address does not exists.',
 	USER_EXISTS: 'The user with this email already exists.',
 	REGISTRATION_EXISTS:
 		'Registration is already in progress for this email. Please check your email.',

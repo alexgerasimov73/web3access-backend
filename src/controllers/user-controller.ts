@@ -1,6 +1,7 @@
 import type { Response, Request, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import {
+	loginService,
 	// loginService,
 	logoutService,
 	refreshService,
@@ -40,22 +41,32 @@ const setRefreshTokenCookie = (res: Response, refreshToken: string) => {
 // 	}
 // }
 
-// export const login = async (
-// 	req: Request,
-// 	res: Response,
-// 	next: NextFunction
-// ) => {
-// 	try {
-// 		const { email, password } = req.body
+export const login = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const errors = validationResult(req)
+		if (!errors.isEmpty()) {
+			return next(ApiError.BadRequest('Validation error', errors.array() as []))
+		}
 
-// 		const userData = await loginService(email, password)
-// 		setRefreshTokenCookie(res, userData.refreshToken)
+		const { chainId, ethAddress, ethSignature, transmittedAt } = req.body
 
-// 		return res.json(userData)
-// 	} catch (error) {
-// 		next(error)
-// 	}
-// }
+		const userData = await loginService(
+			chainId,
+			ethAddress,
+			ethSignature,
+			transmittedAt
+		)
+		setRefreshTokenCookie(res, userData.refreshToken)
+
+		return res.json(userData)
+	} catch (error) {
+		next(error)
+	}
+}
 
 export const logout = async (
 	req: Request,

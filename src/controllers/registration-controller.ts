@@ -119,11 +119,6 @@ export const signDocument = async (
 	next: NextFunction
 ) => {
 	try {
-		const errors = validationResult(req)
-		if (!errors.isEmpty()) {
-			return next(ApiError.BadRequest('Validation error', errors.array() as []))
-		}
-
 		const { id, documentId, ethSignature, transmittedAt } = req.body
 
 		const registrationData = await signDocumentService(
@@ -145,11 +140,6 @@ export const verifyCustomer = async (
 	next: NextFunction
 ) => {
 	try {
-		const errors = validationResult(req)
-		if (!errors.isEmpty()) {
-			return next(ApiError.BadRequest('Validation error', errors.array() as []))
-		}
-
 		const { id, simulatedData } = req.body
 
 		const registrationData = await verifyCustomerService(id, simulatedData)
