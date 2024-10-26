@@ -95,6 +95,6 @@ router.post(
 	login
 )
 
-router.get('/logout', logout)
+router.post('/logout', logout)
 
 export default router
