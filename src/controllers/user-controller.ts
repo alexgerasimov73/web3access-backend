@@ -2,7 +2,6 @@ import type { Response, Request, NextFunction } from 'express'
 import { validationResult } from 'express-validator'
 import {
 	loginService,
-	// loginService,
 	logoutService,
 	refreshService,
 	registerService

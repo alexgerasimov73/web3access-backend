@@ -1,6 +1,11 @@
 import express from 'express'
 import { body } from 'express-validator'
-import { getSettings, login, refresh } from '../controllers/user-controller'
+import {
+	getSettings,
+	login,
+	logout,
+	refresh
+} from '../controllers/user-controller'
 import { authMiddleware } from '../middlewares/auth-middleware'
 import {
 	confirmWallet,
@@ -89,5 +94,7 @@ router.post(
 		}),
 	login
 )
+
+router.get('/logout', logout)
 
 export default router
