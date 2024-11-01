@@ -1,9 +1,6 @@
 import nodemailer from 'nodemailer'
 import dotenv from 'dotenv'
-import {
-	getActivationEmailHTML,
-	getStartRegistrationEmailHTML
-} from '../config/emails'
+import { getStartRegistrationEmailHTML } from '../config/emails'
 
 dotenv.config()
 
@@ -32,21 +29,6 @@ export const sendStartRegistrationMail = async (
 		from: process.env.SMTP_USER,
 		to,
 		subject: `Start your onboarding process at ${process.env.CLIENT_URL}`,
-		html
-	})
-}
-
-// TODO: Revove this function.
-export const sendActivationMail = async (
-	to: string,
-	activationLink: string
-) => {
-	const html = getActivationEmailHTML(activationLink, process.env.API_URL || '')
-
-	await transporter.sendMail({
-		from: process.env.SMTP_USER,
-		to,
-		subject: `Activate Your Account at ${process.env.API_URL}`,
 		html
 	})
 }

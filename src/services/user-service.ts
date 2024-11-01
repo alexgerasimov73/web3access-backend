@@ -1,7 +1,4 @@
-import bcrypt from 'bcrypt'
-import { v4 as uuidv4 } from 'uuid'
 import { IUser, userModel } from '../models/user-model'
-import { sendActivationMail } from './mail-service'
 import {
 	findToken,
 	generateTokens,
@@ -24,42 +21,6 @@ export const getUserData = async (user: IUser) => {
 
 	return { ...tokens, user: userDto }
 }
-
-export const registerService = async (
-	emailAddress: string,
-	password: string
-) => {
-	const candidate = await userModel.findOne({ emailAddress })
-
-	if (candidate)
-		throw ApiError.BadRequest(
-			`The user with this email: ${emailAddress} already exists`
-		)
-
-	const hashedPassword = await bcrypt.hash(password, 3)
-	const activationLink = uuidv4()
-	const user = await userModel.create({
-		emailAddress,
-		password: hashedPassword,
-		activationLink
-	})
-
-	await sendActivationMail(
-		emailAddress,
-		`${process.env.API_URL}/api/activate/${activationLink}`
-	)
-
-	return getUserData(user)
-}
-
-// export const activateService = async (activationLink: string) => {
-// 	const user = await userModel.findOne({ activationLink })
-
-// 	if (!user) throw ApiError.BadRequest('The link is incorrect')
-
-// 	user.isActivated = true
-// 	await user.save()
-// }
 
 export const loginService = async (
 	chainId: number,
@@ -99,5 +60,3 @@ export const refreshService = async (refreshToken: string) => {
 
 	return getUserData(user)
 }
-
-// export const getAllUsersService = async () => await userModel.find()

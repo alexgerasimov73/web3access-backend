@@ -6,7 +6,6 @@ import {
 	logout,
 	refresh
 } from '../controllers/user-controller'
-import { authMiddleware } from '../middlewares/auth-middleware'
 import {
 	confirmWallet,
 	signDocument,
@@ -18,7 +17,6 @@ import {
 
 const router = express.Router()
 
-// router.get('/users', authMiddleware, getUsers)
 router.get('/settings', getSettings)
 
 router.post(
