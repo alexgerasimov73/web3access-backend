@@ -2,6 +2,7 @@ import express from 'express'
 import { body } from 'express-validator'
 import {
 	getSettings,
+	launchServer,
 	login,
 	logout,
 	refresh
@@ -94,5 +95,10 @@ router.post(
 )
 
 router.post('/logout', logout)
+
+// This endpoint is exceptionally needed to launch the server
+// so that the application can be ready for work sooner because,
+// on the free plan, the server doesn't work permanently.
+router.get('/launch-server', launchServer)
 
 export default router

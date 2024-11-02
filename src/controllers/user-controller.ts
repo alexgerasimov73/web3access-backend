@@ -90,3 +90,15 @@ export const getSettings = (
 		next(error)
 	}
 }
+
+export const launchServer = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		return res.json('the server is alive')
+	} catch (error) {
+		next(error)
+	}
+}
